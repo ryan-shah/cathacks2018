@@ -62,4 +62,5 @@ def checkImageData(data):
         if text in bad_text_tags:
             return "Image found to contain the inappropriate text '" + text + "'"
     return ''
-print(checkImageData(analyzeImage("https://pixel.nymag.com/imgs/daily/science/2017/03/03/03-black-lives-matter.w710.h473.jpg")))
+
+#print(checkImageData(analyzeImage("https://pixel.nymag.com/imgs/daily/science/2017/03/03/03-black-lives-matter.w710.h473.jpg")))

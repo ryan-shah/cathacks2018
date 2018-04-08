@@ -27,14 +27,14 @@ def format_post(data):
 
 def analyzePost(data):
     bad_text_tags = [line.rstrip('\n') for line in open('text_tags.txt')]
-    words = data['text'.]split(' ')
+    words = data['text'].split(' ')
     for word in words:
         if word in bad_text_tags:
             return "Post contains inappropriate word, '" + word + "'"
     try:
         image_data = image_processing.analyzeImage(data['img'])
         image_results = image_processing.cheeckImageData(image_data)
-        if image_results not == '':
+        if image_results is not '':
             return image_results
     except:
         pass
@@ -47,7 +47,7 @@ def getPosts():
     access_token = 'EAACEdEose0cBANRGv9koQlZAxDcvqL10iIkYfJVVZAQIpYvN2fKmzZBrJiXCYnXQD7GzzQrtw9PEdIoUvWWR58WqxrmgMhFZASUvZBxh0ruh2DkbAbsBPJnjewnnOyJSjAQAwq4XOFkt76LjkGsxIZA5KWAPrPxzzo4rmZAavGPlUUU3DZCxvYEPHBiFu3sjZBZB9mGWi9XAuQopW88kSa32ZA9oatA9IgWV4YZD'
 
     graph = facebook.GraphAPI(access_token)
-    profile = graph.get_object(user)
+    profile = graph.get_object('me')
     posts = graph.get_connections(id='me', connection_name='posts', fields="message,full_picture,created_time,permalink_url")
     # Wrap this block in a while loop so we can keep paginating requests until
     # finished.
@@ -59,11 +59,12 @@ def getPosts():
             for post in posts['data']:
                 item = format_post(post)
                 check = analyzePost(item)
-                if check not == '':
+                if check is not '':
                     item['msg'] = check
                     result.append(item)
             posts = requests.get(posts['paging']['next']).json()
         except KeyError:
             break
+    return result
 
 print(getPosts())
