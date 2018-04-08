@@ -42,8 +42,6 @@ def get_all_tweets(screen_name):
 	
 	#keep grabbing tweets until there are no tweets left to grab
 	while len(new_tweets) > 0:
-		#print ("getting tweets before %s" % (oldest))
-		
 		#all subsiquent requests use the max_id param to prevent duplicates
 		new_tweets = api.user_timeline(screen_name = screen_name,count=200,max_id=oldest)
 		
@@ -52,31 +50,23 @@ def get_all_tweets(screen_name):
 		
 		#update the id of the oldest tweet less one
 		oldest = alltweets[-1].id - 1
-		
-		#print ("...%s tweets downloaded so far" % (len(alltweets)))
 	
 	#transform the tweepy tweets into a 2D array that will populate the csv	
 	outtweets = [[tweet.created_at, tweet.text.encode("utf-8"), "http://twitter.com/"+screen_name+"/status/"+tweet.id_str] for tweet in alltweets]
 	
 	f = open("text_tags.txt", "r")
-	
-	#print(alltweets)
 		
 	for tweet in alltweets:	
 		for line in f:
 			if line.strip() in tweet.text.lower():
 				dictionaries.append({'text' : tweet.text, 'link' : "http://twitter.com/"+screen_name+"/status/"+tweet.id_str, 'msg' : "This was flagged because it contained" + line, 'date' : tweet.created_at})
 
-def parse_arguments():
-	parser = argparse.ArgumentParser(description='Download pictures from a Twitter feed.')
-	parser.add_argument('username', type=str, help='The twitter screen name from the account we want to retrieve all the pictures')
-	parser.add_argument('--num', type=int, default=100, help='Maximum number of tweets to be returned.')
-	parser.add_argument('--retweets', default=True, action='store_true', help='Include retweets')
-	parser.add_argument('--replies', default=True, action='store_true', help='Include replies')
-	parser.add_argument('--output', default='pictures/', type=str, help='folder where the pictures will be stored')
-
-	args = parser.parse_args()
-	return args
+def parse_arguments(username):
+	parser = []
+	parser.append(username)
+	parser.append(200)
+	parser.append(True)
+	parser.append(True)
 
 def parse_config(config_file):
 	config = configparser.ConfigParser()
@@ -97,7 +87,7 @@ def init_tweepy():
 	tweepy.models.User.first_parse = tweepy.models.User.parse
 	tweepy.models.User.parse = parse
 
-def authorise_twitter_api(config):
+def authorise_twitter_api():
 	auth = OAuthHandler(consumer_key, consumer_secret)
 	auth.set_access_token(access_key, access_secret)
 	return auth
@@ -108,10 +98,8 @@ def parse_image(image_url, url, date):
 	dictionaries.append({'img' : image_url, 'link' : url, 'msg' : result, 'date' : date})
 
 
-def download_images(api, username, retweets, replies, num_tweets, output_folder):
+def download_images(api, username, retweets, replies, num_tweets):
 	tweets = api.user_timeline(screen_name=username, count=200, include_rts=retweets, exclude_replies=replies)
-	if not os.path.exists(output_folder):
-		os.makedirs(output_folder)
 
 	downloaded = 0
 	while (len(tweets) != 0):
@@ -119,38 +107,28 @@ def download_images(api, username, retweets, replies, num_tweets, output_folder)
 
 		for status in tweets:
 			media = status.entities.get('media', [])
-			#print(media)
 			if(len(media) > 0 and downloaded < num_tweets):
-				#wget.download(media[0]['media_url'], out=output_folder)
-				#if (not(os.path.isdir("pictures"))):
-					#os.mkdir("pictures")
 				parse_image(media[0]['media_url'], "http://twitter.com/"+username+"/status/" + status.entities.get(0, 'id_str'), status.entities.get(0, 'created_at'))
 			downloaded += 1
 
 		tweets = api.user_timeline(screen_name=username, count=200, include_rts=retweets, exclude_replies=replies, max_id=last_id-1)
 
 
-def main():
-	arguments = parse_arguments()
-	username = arguments.username
-	retweets = arguments.retweets
-	replies = arguments.replies
-	num_tweets = arguments.num
-	output_folder = arguments.output
+def main(username):
+	arguments = parse_arguments(username)
+	username = arguments[0]
+	num_tweets = arguments[1]
+	retweets = arguments[2]
+	replies = arguments[3]
 
-	config = parse_config('twitter_config.cfg')
-	auth = authorise_twitter_api(config)
+	auth = authorise_twitter_api()
 	api = tweepy.API(auth)
 
-	download_images(api, username, retweets, replies, num_tweets, output_folder)
+	download_images(api, username, retweets, replies, num_tweets)
 
 
 def get_parsed_tweets():
 #if __name__ == "__main__":
-	#pass in the username of the account you want to download
-	parser = argparse.ArgumentParser(description='Process a username.')
-	parser.add_argument('username', type=str, help='a username')
-	args = parser.parse_args()
-	get_all_tweets(args.username)
-	main()
+	get_all_tweets("CatHacks2018")
+	main("CatHacks2018")
 	return dictionaries
