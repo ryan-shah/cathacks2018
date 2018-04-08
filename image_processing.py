@@ -63,4 +63,4 @@ def checkImageData(data):
             return "Image found to contain the inappropriate text '" + text + "'"
     return ''
 
-print(checkImageData(analyzeImage("https://scontent.xx.fbcdn.net/v/t1.0-9/30412175_110496376470924_5483154094174502912_n.jpg?_nc_cat=0&oh=2a9d25db6cd99b7f5dfe615992ede668&oe=5B5FE6F1")))
+#print(checkImageData(analyzeImage("https://scontent.xx.fbcdn.net/v/t1.0-9/30412175_110496376470924_5483154094174502912_n.jpg?_nc_cat=0&oh=2a9d25db6cd99b7f5dfe615992ede668&oe=5B5FE6F1")))

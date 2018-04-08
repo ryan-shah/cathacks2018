@@ -33,12 +33,11 @@ def analyzePost(data):
             return "Post contains inappropriate word, '" + word + "'"
     try:
         image_data = image_processing.analyzeImage(data['img'])
-        image_results = image_processing.cheeckImageData(image_data)
-        if image_results is not '':
-            return image_results
     except:
-        pass
-
+        return ''
+    image_results = image_processing.checkImageData(image_data)
+    if image_results is not '':
+        return image_results
     return ''
 
 def getPosts():
@@ -58,7 +57,6 @@ def getPosts():
         try:
             for post in posts['data']:
                 item = format_post(post)
-                print(item)
                 check = analyzePost(item)
                 if check is not '':
                     item['msg'] = check
