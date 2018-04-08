@@ -1,0 +1,61 @@
+.welcome-container{
+    width: 100%;
+    position: absolute;
+    top: 7vh;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+
+}
+
+.welcome-container h2, p {
+    text-align: center;
+}
+
+.welcome-container h2 {
+    font-size: 10em;
+}
+
+.welcome-container p {
+    font-size: 1.5em;
+}
+
+.facebook img {
+    width: 14em;
+    justify-content: center;
+}
+
+.twitter img {
+    width: 13em;
+    justify-content: center;
+
+}
+
+.posts-found {
+    margin-left: 7vw;
+    margin-top: 10vh;
+    width: 55vw;
+
+    margin-bottom: 10vh;
+}
+
+.posts-found h1 {
+    font-size: 3em;
+    line-height: 1.5em;
+}
+
+.gallery {
+    display: flex;
+    justify-content: space-around;
+}
+
+.individual_post {
+    width: 15vw;
+    height: 15vw;
+    background-color: red;
+}
