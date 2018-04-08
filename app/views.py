@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
-
+import google
 def index(request):
     return HttpResponse(render(request, 'app/index.html'))
 
