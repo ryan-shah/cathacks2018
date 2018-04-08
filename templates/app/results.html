@@ -1,0 +1,22 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<body>
+    <div class="results">
+        <div class="posts-found">
+            <h1>We found {{ posts|length }} potentially questionable posts and images:</h1>
+        </div>
+        <div class="gallery">
+            {% for post in posts %}
+                <div class="individual_post" id="post-{{ forloop.counter }}">
+                    Hi
+                    {# Include a new modal with the information #}
+                    {% include 'app/result_modal.html' with id=forloop.counter post=post %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+{% endblock %}
