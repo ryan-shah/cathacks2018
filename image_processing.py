@@ -1,5 +1,6 @@
-import io
+from io import BytesIO
 import os
+import requests
 
 # Imports the Google Cloud client library
 from google.cloud import vision
@@ -9,10 +10,10 @@ from google.cloud.vision import types
 client = vision.ImageAnnotatorClient()
 
 # The name of the image file to annotate
-file_name = "C:\\Users\\ryan9\\Downloads\\blm-image.jpg"
+file_url = "https://pixel.nymag.com/imgs/daily/science/2017/03/03/03-black-lives-matter.w710.h473.jpg"
 
-with io.open(file_name, 'rb') as image_file:
-        content = image_file.read()
+response = requests.get(file_url)
+content = BytesIO(response.content).read()
 
 image = types.Image(content=content)
 
