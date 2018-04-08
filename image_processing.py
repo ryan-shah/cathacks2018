@@ -53,13 +53,13 @@ def checkImageData(data):
         if data['safe_search'][key] >= 3:
             return "Image flagged for " + key + " content"
 
-    bad_image_tags = [line.rstrip('\n') for line in open('image_tags.txt')]
-    bad_text_tags = [line.rstrip('\n') for line in open('text_tags.txt')]
+    bad_image_tags = [line.rstrip('\n').lower() for line in open('image_tags.txt')]
+    bad_text_tags = [line.rstrip('\n').lower() for line in open('text_tags.txt')]
     for label in data["label"]:
-        if label in bad_image_tags:
+        if label.lower() in bad_image_tags:
             return "Image flagged for '" + label + "'"
     for text in data["ocr"]:
-        if text in bad_text_tags:
+        if text.lower() in bad_text_tags:
             return "Image found to contain the inappropriate text '" + text + "'"
     return ''
 
