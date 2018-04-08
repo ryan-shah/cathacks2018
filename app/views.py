@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from app import facebook_posts
 
 def index(request):
     return HttpResponse(render(request, 'app/index.html'))
@@ -40,5 +41,8 @@ def results(request):
             'date': 'someday'
         }
     ]
+
+    posts_with_information = facebook_posts.getPosts()
+
     data = {'posts': posts_with_information}
     return HttpResponse(render(request, 'app/results.html', data))

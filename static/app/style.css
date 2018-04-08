@@ -75,3 +75,13 @@
     text-overflow: ellipsis;
     text-align: left;
 }
+
+.modal-body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.modal-body img {
+
+}
