@@ -1,5 +1,4 @@
 darn
-crud
 shucks
-rats
+shoot
 nerfherder
