@@ -113,9 +113,9 @@ def download_images(api, username, retweets, replies, num_tweets):
         last_id = tweets[-1].id
 
         for status in tweets:
-            #print(status['id_str'])
+            print(status['id_str'])
             media = status.entities.get('media', [])
-            print(media)
+            #print(media)
             if (len(media) > 0 and downloaded < num_tweets):
                 parse_image(media[0]['media_url'],
                             "http://twitter.com/" + username + "/status/" + status.entities.get(0, 'id_str'),
