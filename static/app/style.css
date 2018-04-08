@@ -35,3 +35,27 @@
     justify-content: center;
 
 }
+
+.posts-found {
+    margin-left: 7vw;
+    margin-top: 10vh;
+    width: 55vw;
+
+    margin-bottom: 10vh;
+}
+
+.posts-found h1 {
+    font-size: 3em;
+    line-height: 1.5em;
+}
+
+.gallery {
+    display: flex;
+    justify-content: space-around;
+}
+
+.individual_post {
+    width: 15vw;
+    height: 15vw;
+    background-color: red;
+}
