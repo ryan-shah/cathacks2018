@@ -5,15 +5,14 @@ Originally created by Mitchell Stewart.
 """
 import facebook
 import requests
-from app import image_processing
-
+import image_processing
 
 def format_post(data):
     """ Here you might want to do something with each post. E.g. grab the
     post's message (post['message']) or the post's picture (post['picture']).
     In this implementation we just print the post's created time.
     """
-    result = {"img": "", 'text': '', 'link': '', 'msg': '', 'date': ''}
+    result = {"img":"", 'text':'', 'link':'', 'msg':'', 'date':''}
     try:
         result['text'] = data['message']
     except:
@@ -26,12 +25,11 @@ def format_post(data):
     result['link'] = data['permalink_url']
     return result
 
-
 def analyzePost(data):
-    bad_text_tags = [line.rstrip('\n') for line in open(r"C:\Users\alija\Downloads\text_tags.txt")]
+    bad_text_tags = [line.rstrip('\n').lower() for line in open('text_tags.txt')]
     words = data['text'].split(' ')
     for word in words:
-        if word in bad_text_tags:
+        if word.lower() in bad_text_tags:
             return "Post contains inappropriate word, '" + word + "'"
     try:
         image_data = image_processing.analyzeImage(data['img'])
@@ -42,16 +40,14 @@ def analyzePost(data):
         return image_results
     return ''
 
-
 def getPosts():
     # You'll need an access token here to do anything.  You can get a temporary one
     # here: https://developers.facebook.com/tools/explorer/
-    access_token = 'EAACEdEose0cBAJ0CjN35ZBCwtha4WiGB6S981Jvj9FHZAwJobO5QL8yEWzEQHgGDCqxB0W7UkrQHFM1AumusMTYbDyT2V4g2d3uEbEge9HbMEOAiDxCZC5BLdaC4NDrZCVWTheLWSZAacJI9EhhQQRBoD7Kg2ZAZBroRZCDJcuEM1D7DHdpESy3xSemAjteshdvyYB6fqwTP4Lq3z4P1OyiwZBL07F0qeCVQZD'
+    access_token = 'EAACEdEose0cBALOGZBqvEDOFaZB7I5ybALXExC7vODPdbnV1rjWu9AhCWIThdS08HfqycFGB2wt3r1awo7vZAxCtzvu8zyvDsHuVrAZCwM1iH7vq4nhL0Nv7cAkfFFyWUBzZAMcBsCRTkA9dTmLahUKs3NOIzH1bW7LyALrG09EjPSQd67TFrs1fgXGY26mwZBgSBCay2u82PF4fTISg811Cpky9BTkFEZD'
 
     graph = facebook.GraphAPI(access_token)
     profile = graph.get_object('me')
-    posts = graph.get_connections(id='me', connection_name='posts',
-                                  fields="message,full_picture,created_time,permalink_url")
+    posts = graph.get_connections(id='me', connection_name='posts', fields="message,full_picture,created_time,permalink_url")
     # Wrap this block in a while loop so we can keep paginating requests until
     # finished.
     # Perform some action on each post in the collection we receive from
@@ -69,3 +65,5 @@ def getPosts():
         except KeyError:
             break
     return result
+
+print(getPosts())
