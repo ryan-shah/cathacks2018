@@ -5,43 +5,65 @@ Originally created by Mitchell Stewart.
 """
 import facebook
 import requests
-import json
+import image_processing
 
-def some_action(post):
+def format_post(data):
     """ Here you might want to do something with each post. E.g. grab the
     post's message (post['message']) or the post's picture (post['picture']).
     In this implementation we just print the post's created time.
     """
-    print('id:',post['id'])
-    print('message',post['message'])
-    print('image',post['full_picture'])
-    print('time',post['created_time'])
-    print('url',post['permalink_url'])
-    print()
-
-
-# You'll need an access token here to do anything.  You can get a temporary one
-# here: https://developers.facebook.com/tools/explorer/
-access_token = 'EAACEdEose0cBAIcOZCOIvcyZBgGWjqZAC0PPqAGQTv5ZB7aqb05tPhKG0MRXZCLeKZAUerbHUGz661hDrsRguY3R9zqAax7QFuZAiXcwejxKT15ZB22TQvkEKfYCT2N1RYykuQlDsvRSoPSdmoWEf09EQ83ViyjPYpNHoHdFI9ci3PKysNE1qDSCSAFdVYP4kElLPyQxnESXEUOdZCTWZC8lURzLhd5vIPZCYkZD'
-# Look at Bill Gates's profile for this example by using his Facebook id.
-user = '110355093151719'
-
-graph = facebook.GraphAPI(access_token)
-profile = graph.get_object(user)
-posts = graph.get_connections(id='me', connection_name='posts', fields="id,message,full_picture,created_time,permalink_url")
-# Wrap this block in a while loop so we can keep paginating requests until
-# finished.
-count = 0
-while True:
+    result = {"img":"", 'text':'', 'link':'', 'msg':'', 'date':''}
     try:
-        # Perform some action on each post in the collection we receive from
-        # Facebook.
-        print(json.dump(posts))
-        [some_action(post=post) for post in posts['data']]
-        # Attempt to make a request to the next page of data, if it exists.
-        posts = requests.get(posts['paging']['next']).json()
-    except KeyError:
-        # When there are no more pages (['paging']['next']), break from the
-        # loop and end the script.
-        break
-print(count)
+        result['text'] = data['message']
+    except:
+        pass
+    try:
+        result['img'] = data['full_picture']
+    except:
+        pass
+    result['date'] = data['created_time']
+    result['link'] = data['permalink_url']
+    return result
+
+def analyzePost(data):
+    bad_text_tags = [line.rstrip('\n') for line in open('text_tags.txt')]
+    words = data['text'.]split(' ')
+    for word in words:
+        if word in bad_text_tags:
+            return "Post contains inappropriate word, '" + word + "'"
+    try:
+        image_data = image_processing.analyzeImage(data['img'])
+        image_results = image_processing.cheeckImageData(image_data)
+        if image_results not == '':
+            return image_results
+    except:
+        pass
+
+    return ''
+
+def getPosts():
+    # You'll need an access token here to do anything.  You can get a temporary one
+    # here: https://developers.facebook.com/tools/explorer/
+    access_token = 'EAACEdEose0cBANRGv9koQlZAxDcvqL10iIkYfJVVZAQIpYvN2fKmzZBrJiXCYnXQD7GzzQrtw9PEdIoUvWWR58WqxrmgMhFZASUvZBxh0ruh2DkbAbsBPJnjewnnOyJSjAQAwq4XOFkt76LjkGsxIZA5KWAPrPxzzo4rmZAavGPlUUU3DZCxvYEPHBiFu3sjZBZB9mGWi9XAuQopW88kSa32ZA9oatA9IgWV4YZD'
+
+    graph = facebook.GraphAPI(access_token)
+    profile = graph.get_object(user)
+    posts = graph.get_connections(id='me', connection_name='posts', fields="message,full_picture,created_time,permalink_url")
+    # Wrap this block in a while loop so we can keep paginating requests until
+    # finished.
+    # Perform some action on each post in the collection we receive from
+    # Facebook.
+    result = []
+    while True:
+        try:
+            for post in posts['data']:
+                item = format_post(post)
+                check = analyzePost(item)
+                if check not == '':
+                    item['msg'] = check
+                    result.append(item)
+            posts = requests.get(posts['paging']['next']).json()
+        except KeyError:
+            break
+
+print(getPosts())

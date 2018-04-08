@@ -6,34 +6,61 @@ import requests
 from google.cloud import vision
 from google.cloud.vision import types
 
-# Instantiates a client
-client = vision.ImageAnnotatorClient()
+def analyzeImage(url):
+    # Instantiates a client
+    client = vision.ImageAnnotatorClient()
 
-# The name of the image file to annotate
-file_url = "https://pixel.nymag.com/imgs/daily/science/2017/03/03/03-black-lives-matter.w710.h473.jpg"
+    # get image binary
+    response = requests.get(url)
+    content = BytesIO(response.content).read()
+    image = types.Image(content=content)
 
-response = requests.get(file_url)
-content = BytesIO(response.content).read()
+    # check labels
+    l_response = client.label_detection(image=image)
+    labels = l_response.label_annotations
 
-image = types.Image(content=content)
+    # check safe search
+    s_response = client.safe_search_detection(image=image)
+    safe_search = s_response.safe_search_annotation
 
-response = client.label_detection(image=image)
-labels = response.label_annotations
+    # check OCR detection
+    o_response = client.text_detection(image=image)
+    OCR = o_response.text_annotations
 
-response2 = client.safe_search_detection(image=image)
-result = response2.safe_search_annotation
+    result = {"label":"", "safe_search":{}, "ocr":""}
 
-response3 = client.text_detection(image=image)
-result2 = response3.text_annotations
+    result["label"] = [label.description for label in labels]
+    result["safe_search"]["adult"] = safe_search.adult
+    result["safe_search"]["spoof"] = safe_search.spoof
+    result["safe_search"]["medical"] = safe_search.spoof
+    result["safe_search"]["violent"] = safe_search.violence
+    result["safe_search"]["racy"] = safe_search.racy
+    result["ocr"] = [text.description for text in OCR]
+    """
+    print('Safe Search:')
+    print(result['safe_search'])
 
+    print('Text:')
+    print(result['ocr'])
 
-print('Safe Search:')
-print(result)
+    print('Labels:')
+    print(result["label"])
+    """
+    return result
 
-print('Text:')
-for text in result2:
-    print(text.description)
+def checkImageData(data):
+    for key in data['safe_search']:
+        if data['safe_search'][key] >= 3:
+            return "Image flagged for " + key + " content"
 
-print('Labels:')
-for label in labels:
-    print(label.description)
+    bad_image_tags = [line.rstrip('\n') for line in open('image_tags.txt')]
+    bad_text_tags = [line.rstrip('\n') for line in open('text_tags.txt')]
+    for label in data["label"]:
+        if label in bad_image_tags:
+            return "Image flagged for '" + label + "'"
+    for text in data["ocr"]:
+        if text in bad_text_tags:
+            return "Image found to contain the inappropriate text '" + text + "'"
+    return ''
+
+#print(checkImageData(analyzeImage("https://pixel.nymag.com/imgs/daily/science/2017/03/03/03-black-lives-matter.w710.h473.jpg")))
