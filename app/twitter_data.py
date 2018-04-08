@@ -4,7 +4,7 @@
 from tweepy import OAuthHandler
 import json
 import configparser
-from app import image_processing
+import image_processing
 import tweepy  # https://github.com/tweepy/tweepy
 
 
@@ -113,7 +113,9 @@ def download_images(api, username, retweets, replies, num_tweets):
         last_id = tweets[-1].id
 
         for status in tweets:
+            #print(status['id_str'])
             media = status.entities.get('media', [])
+            print(media)
             if (len(media) > 0 and downloaded < num_tweets):
                 parse_image(media[0]['media_url'],
                             "http://twitter.com/" + username + "/status/" + status.entities.get(0, 'id_str'),
@@ -138,7 +140,9 @@ def main(username):
 
 def get_parsed_tweets():
     # if __name__ == "__main__":
-    get_all_tweets("HeckFood")
-    main("HeckFood")
-    # print(dictionaries)
+    get_all_tweets("CatHacks2018")
+    main("CatHacsk2018")
+    print(dictionaries)
     return dictionaries
+
+main('CatHacks2018')
