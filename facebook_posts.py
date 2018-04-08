@@ -26,10 +26,10 @@ def format_post(data):
     return result
 
 def analyzePost(data):
-    bad_text_tags = [line.rstrip('\n') for line in open('text_tags.txt')]
+    bad_text_tags = [line.rstrip('\n').lower() for line in open('text_tags.txt')]
     words = data['text'].split(' ')
     for word in words:
-        if word in bad_text_tags:
+        if word.lower() in bad_text_tags:
             return "Post contains inappropriate word, '" + word + "'"
     try:
         image_data = image_processing.analyzeImage(data['img'])
@@ -43,7 +43,7 @@ def analyzePost(data):
 def getPosts():
     # You'll need an access token here to do anything.  You can get a temporary one
     # here: https://developers.facebook.com/tools/explorer/
-    access_token = 'EAACEdEose0cBACUR85suq9pZCfr8l1JaRSDE3TEFQFiWic8nItTrXEeCZAUpC1ZBxRnqN4EUDcv556i4YDUWJpKR7BfAdG9aYqvbU3rjNIbbExTEQqZBztvjHRgQbTtqXyiTvURcKKzRz4TnuCJQV5XBfMONh08rIr8m7ry8hdDZAHNZCWsZCZB4qh4IByG2hbODwNZABwLoZANtih5UCQ6Um9ocQGZAql6V5cZD'
+    access_token = 'EAACEdEose0cBALOGZBqvEDOFaZB7I5ybALXExC7vODPdbnV1rjWu9AhCWIThdS08HfqycFGB2wt3r1awo7vZAxCtzvu8zyvDsHuVrAZCwM1iH7vq4nhL0Nv7cAkfFFyWUBzZAMcBsCRTkA9dTmLahUKs3NOIzH1bW7LyALrG09EjPSQd67TFrs1fgXGY26mwZBgSBCay2u82PF4fTISg811Cpky9BTkFEZD'
 
     graph = facebook.GraphAPI(access_token)
     profile = graph.get_object('me')
