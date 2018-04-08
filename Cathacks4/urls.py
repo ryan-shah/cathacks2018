@@ -21,6 +21,6 @@ app_name = 'app'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('results/', views.results, name='results'),
+    path('<str:platform>/results/', views.results, name='results'),
     path('', views.index),
 ]

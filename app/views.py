@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from app import facebook_posts
+from app import twitter_data
 
 
 def index(request):
@@ -18,7 +19,7 @@ def load_data(request):
     return HttpResponse(render(request, 'app/results.html', data))
 
 
-def results(request):
+def results(request, platform):
     # What needs to happen here?
     #   - Data from the given website request (Facebook or Twitter) needs to be pulled, processed
     #   - Data needs to be organized in a meaningful way: images vs text, severity
@@ -53,7 +54,10 @@ def results(request):
         }
     ]
 
-    posts_with_information = facebook_posts.getPosts()
+    if platform == 'facebook':
+        posts_with_information = facebook_posts.getPosts()
+    else:
+        posts_with_information = twitter_data.get_parsed_tweets()
 
     data = {'posts': posts_with_information}
     return HttpResponse(render(request, 'app/results.html', data))
