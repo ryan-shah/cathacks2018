@@ -58,6 +58,7 @@ def getPosts():
         try:
             for post in posts['data']:
                 item = format_post(post)
+                print(item)
                 check = analyzePost(item)
                 if check is not '':
                     item['msg'] = check
