@@ -3,8 +3,10 @@ import os
 import requests
 
 # Imports the Google Cloud client library
-from google.cloud import vision
-from google.cloud.vision import types
+from google.cloud import vision_v1 as vision
+from google.cloud.vision_v1 import types
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"C:\Users\alija\Downloads\google_auth.json"
 
 def analyzeImage(url):
     # Instantiates a client
@@ -34,7 +36,6 @@ def analyzeImage(url):
     result["safe_search"]["spoof"] = safe_search.spoof
     result["safe_search"]["medical"] = safe_search.spoof
     result["safe_search"]["violent"] = safe_search.violence
-    result["safe_search"]["racy"] = safe_search.racy
     result["ocr"] = [text.description for text in OCR]
     """
     print('Safe Search:')
@@ -53,14 +54,12 @@ def checkImageData(data):
         if data['safe_search'][key] >= 3:
             return "Image flagged for " + key + " content"
 
-    bad_image_tags = [line.rstrip('\n').lower() for line in open('image_tags.txt')]
-    bad_text_tags = [line.rstrip('\n').lower() for line in open('text_tags.txt')]
+    bad_image_tags = [line.rstrip('\n') for line in open(r"C:\Users\alija\Downloads\image_tags.txt")]
+    bad_text_tags = [line.rstrip('\n') for line in open(r"C:\Users\alija\Downloads\text_tags.txt")]
     for label in data["label"]:
-        if label.lower() in bad_image_tags:
+        if label in bad_image_tags:
             return "Image flagged for '" + label + "'"
     for text in data["ocr"]:
-        if text.lower() in bad_text_tags:
+        if text in bad_text_tags:
             return "Image found to contain the inappropriate text '" + text + "'"
     return ''
-
-#print(checkImageData(analyzeImage("https://scontent.xx.fbcdn.net/v/t1.0-9/30412175_110496376470924_5483154094174502912_n.jpg?_nc_cat=0&oh=2a9d25db6cd99b7f5dfe615992ede668&oe=5B5FE6F1")))
