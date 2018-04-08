@@ -59,14 +59,14 @@ def get_all_tweets(screen_name):
 	for tweet in alltweets:	
 		for line in f:
 			if line.strip() in tweet.text.lower():
-				dictionaries.append({'text' : tweet.text, 'link' : "http://twitter.com/"+screen_name+"/status/"+tweet.id_str, 'msg' : "This was flagged because it contained" + line, 'date' : tweet.created_at})
+				dictionaries.append({'img' : "", 'text' : tweet.text, 'link' : "http://twitter.com/"+screen_name+"/status/"+tweet.id_str, 'msg' : "This was flagged because it contained " + line, 'date' : tweet.created_at})
 
-def parse_arguments(username):
+def parse_arguments():
 	parser = []
-	parser.append(username)
 	parser.append(200)
 	parser.append(True)
 	parser.append(True)
+	return parser
 
 def parse_config(config_file):
 	config = configparser.ConfigParser()
@@ -95,7 +95,7 @@ def authorise_twitter_api():
 def parse_image(image_url, url, date):
 	result_text = image_processing.analyzeImage(image_url)
 	result = image_processing.checkImageData(result_text)
-	dictionaries.append({'img' : image_url, 'link' : url, 'msg' : result, 'date' : date})
+	dictionaries.append({'text' : "", 'img' : image_url, 'link' : url, 'msg' : result, 'date' : date})
 
 
 def download_images(api, username, retweets, replies, num_tweets):
@@ -115,11 +115,10 @@ def download_images(api, username, retweets, replies, num_tweets):
 
 
 def main(username):
-	arguments = parse_arguments(username)
-	username = arguments[0]
-	num_tweets = arguments[1]
-	retweets = arguments[2]
-	replies = arguments[3]
+	arguments = parse_arguments()
+	num_tweets = arguments[0]
+	retweets = arguments[1]
+	replies = arguments[2]
 
 	auth = authorise_twitter_api()
 	api = tweepy.API(auth)
@@ -131,4 +130,5 @@ def get_parsed_tweets():
 #if __name__ == "__main__":
 	get_all_tweets("CatHacks2018")
 	main("CatHacks2018")
+	#print(dictionaries)
 	return dictionaries
