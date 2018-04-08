@@ -10,7 +10,11 @@
         <div class="gallery">
             {% for post in posts %}
                 <div class="individual_post" id="post-{{ forloop.counter }}">
-                    Hi
+                    {% if post.img %}
+                        <img src="{{ post.img }}" class="post_img">
+                    {% else %}
+                        <p class="post_text">{{ post.text }}</p>
+                    {% endif %}
                     {# Include a new modal with the information #}
                     {% include 'app/result_modal.html' with id=forloop.counter post=post %}
                 </div>

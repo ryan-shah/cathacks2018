@@ -52,10 +52,26 @@
 .gallery {
     display: flex;
     justify-content: space-around;
+    margin-left: 7em;
+    margin-right: 7em;
 }
 
 .individual_post {
+    padding: 1em;
     width: 15vw;
     height: 15vw;
-    background-color: red;
+    background-color: #fefefa;
+    border: solid 2px #ddd;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.individual_post img {
+    height: auto;
+    max-width: 100%;
+}
+
+.post_text {
+    text-overflow: ellipsis;
+    text-align: left;
 }
