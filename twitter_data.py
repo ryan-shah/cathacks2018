@@ -3,6 +3,7 @@
 
 import tweepy #https://github.com/tweepy/tweepy
 import csv
+import argparse
 
 #Twitter API credentials
 consumer_key = "jekbS4RL46dzmVvCGxlpphxNg"
@@ -50,7 +51,7 @@ def get_all_tweets(screen_name):
 	outtweets = [[tweet.id_str, tweet.created_at, tweet.text.encode("utf-8")] for tweet in alltweets]
 	
 	#write the csv	
-	with open('%s_tweets.csv' % screen_name, 'wb') as f:
+	with open('tweets/%s_tweets.csv' % screen_name, 'wb') as f:
 		writer = csv.writer(f)
 		writer.writerow(["id","created_at","text"])
 		writer.writerows(outtweets)
@@ -60,5 +61,8 @@ def get_all_tweets(screen_name):
 
 if __name__ == '__main__':
 	#pass in the username of the account you want to download
-	get_all_tweets("CatHacks2018")
+	parser = argparse.ArgumentParser(description='Process a username.')
+	parser.add_argument('username', type=str, help='a username')
+	args = parser.parse_args()
+	get_all_tweets(args.username)
 
