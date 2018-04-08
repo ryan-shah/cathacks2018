@@ -4,6 +4,7 @@
 import tweepy #https://github.com/tweepy/tweepy
 import csv
 import argparse
+import os
 
 #Twitter API credentials
 consumer_key = "jekbS4RL46dzmVvCGxlpphxNg"
@@ -48,12 +49,15 @@ def get_all_tweets(screen_name):
 		print ("...%s tweets downloaded so far" % (len(alltweets)))
 	
 	#transform the tweepy tweets into a 2D array that will populate the csv	
-	outtweets = [[tweet.id_str, tweet.created_at, tweet.text.encode("utf-8")] for tweet in alltweets]
+	outtweets = [[tweet.id_str, tweet.created_at, tweet.text.encode("utf-8"), "http://twitter.com/"+screen_name+"/status/"+tweet.id_str] for tweet in alltweets]
 	
-	#write the csv	
-	with open('tweets/%s_tweets.csv' % screen_name, 'wb') as f:
+	#write the csv
+	if (not(os.path.isdir("tweets"))):
+		os.mkdir("tweets")
+	
+	with open('tweets/%s_tweets.csv' % screen_name, 'w') as f:
 		writer = csv.writer(f)
-		writer.writerow(["id","created_at","text"])
+		writer.writerow(['id','created_at','text', 'url'])
 		writer.writerows(outtweets)
 	
 	pass
