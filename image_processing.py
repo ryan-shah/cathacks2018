@@ -2,14 +2,15 @@ import io
 import os
 
 # Imports the Google Cloud client library
-from google.cloud import vision
-from google.cloud.vision import types
+from google.cloud import vision_v1 as vision
+from google.cloud.vision_v1 import types
+
 
 # Instantiates a client
 client = vision.ImageAnnotatorClient()
 
 # The name of the image file to annotate
-file_name = "C:\\Users\\ryan9\\Downloads\\riot-image.jpg"
+file_name = r"C:\Users\alija\Downloads\drugs.jpg"
 
 with io.open(file_name, 'rb') as image_file:
         content = image_file.read()
