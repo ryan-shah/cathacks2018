@@ -46,7 +46,7 @@ def analyzePost(data):
 def getPosts():
     # You'll need an access token here to do anything.  You can get a temporary one
     # here: https://developers.facebook.com/tools/explorer/
-    access_token = 'EAACEdEose0cBACUR85suq9pZCfr8l1JaRSDE3TEFQFiWic8nItTrXEeCZAUpC1ZBxRnqN4EUDcv556i4YDUWJpKR7BfAdG9aYqvbU3rjNIbbExTEQqZBztvjHRgQbTtqXyiTvURcKKzRz4TnuCJQV5XBfMONh08rIr8m7ry8hdDZAHNZCWsZCZB4qh4IByG2hbODwNZABwLoZANtih5UCQ6Um9ocQGZAql6V5cZD'
+    access_token = 'EAACEdEose0cBAJ0CjN35ZBCwtha4WiGB6S981Jvj9FHZAwJobO5QL8yEWzEQHgGDCqxB0W7UkrQHFM1AumusMTYbDyT2V4g2d3uEbEge9HbMEOAiDxCZC5BLdaC4NDrZCVWTheLWSZAacJI9EhhQQRBoD7Kg2ZAZBroRZCDJcuEM1D7DHdpESy3xSemAjteshdvyYB6fqwTP4Lq3z4P1OyiwZBL07F0qeCVQZD'
 
     graph = facebook.GraphAPI(access_token)
     profile = graph.get_object('me')

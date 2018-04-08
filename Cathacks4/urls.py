@@ -17,8 +17,10 @@ from django.urls import path, include
 from django.contrib import admin
 from app import views
 
+app_name = 'app'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('results/', views.results, name='results'),
     path('', views.index),
-    path('results/', views.results),
 ]

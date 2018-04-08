@@ -3,8 +3,19 @@ from django.shortcuts import render
 
 from app import facebook_posts
 
+
 def index(request):
     return HttpResponse(render(request, 'app/index.html'))
+
+
+def render_load(request):
+    return HttpResponse(render(request, 'app/loading.html'))
+
+
+def load_data(request):
+    posts_with_information = facebook_posts.getPosts()
+    data = {'posts': posts_with_information}
+    return HttpResponse(render(request, 'app/results.html', data))
 
 
 def results(request):
