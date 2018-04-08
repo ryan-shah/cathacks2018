@@ -105,6 +105,8 @@ def authorise_twitter_api(config):
 def parse_image(image_url, url, date):
 	result_text = image_processing.analyzeImage(image_url)
 	result = image_processing.checkImageData(result_text)
+	dictionaries.append({'img' : image_url, 'link' : url, 'msg' : result, 'date' : date})
+
 
 def download_images(api, username, retweets, replies, num_tweets, output_folder):
 	tweets = api.user_timeline(screen_name=username, count=200, include_rts=retweets, exclude_replies=replies)
